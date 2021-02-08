@@ -1,0 +1,2 @@
+def readFilesData():
+    return None
