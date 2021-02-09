@@ -7,6 +7,7 @@ from typing import List
 from src.config.appConfig import getMeasInfo
 from datetime import timedelta
 from src.typeDefs.metricsDataRecord import IMetricsDataRecord
+from src.dataFetchers.fileDataFetcher import getMeasData
 
 def getFileData(fileInfo: IFileInfo, targetDt: dt.datetime) -> List[IMetricsDataRecord]:
     # TODO fetch with openpyxl
@@ -29,8 +30,11 @@ def getFileData(fileInfo: IFileInfo, targetDt: dt.datetime) -> List[IMetricsData
             entity_tag = eachMeasInfo['entity_tag']
             metric_name = eachMeasInfo['metric_name']
             time_stamp = targetDt + timedelta(hours= int(time_offset[0]), minutes=int(time_offset[1]))
-            data_val = ws[address].value
+            # data_val = ws[address].value
 
+            data_val = getMeasData(ws, address, str(eachMeasInfo['aggregation_strategy']), str(eachMeasInfo['equation']))
+            print(data_val)
+            # print(valuesList)
             record:IMetricsDataRecord = {
                 "data_time": time_stamp,
                 "entity_tag": entity_tag,

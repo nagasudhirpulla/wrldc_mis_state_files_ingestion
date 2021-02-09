@@ -34,7 +34,7 @@ def loadMeasInfo(filePath='config.xlsx', sheetname='meas_info') -> List[IMeasInf
     global measConfs
     measConfsDf = pd.read_excel(filePath, sheet_name=sheetname)
 
-    # measConfs = measConfs.where(pd.notnull(fileMappings), None)
+    # measConfsDf = measConfsDf.where(pd.notnull(fileMappings), None)
     measConfs = measConfsDf.to_dict('records')
     return measConfs
 
