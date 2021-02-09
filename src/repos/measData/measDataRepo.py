@@ -1,6 +1,6 @@
 import datetime
 from typing import List, Any
-from typeDefs.metricsDataRecord import IMetricsDataRecord
+from src.typeDefs.metricsDataRecord import IMetricsDataRecord
 from src.repos.measData.insertMetricsData import insertMetricsData
 
 class MeasDataRepo():

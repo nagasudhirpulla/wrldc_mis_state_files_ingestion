@@ -1,5 +1,5 @@
 from openpyxl.worksheet.worksheet import Worksheet
-from typeDefs.fileInfo import IFileInfo
+from src.typeDefs.fileInfo import IFileInfo
 import datetime as dt
 from openpyxl import load_workbook
 
