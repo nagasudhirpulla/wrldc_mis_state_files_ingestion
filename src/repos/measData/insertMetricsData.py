@@ -17,17 +17,30 @@ def insertMetricsData(appDbConnStr: str, dataSamples: List[IMetricsDataRecord]) 
     dbConn = None
     dbCur = None
     isInsertSuccess = True
+    if len(dataSamples) == 0:
+        return isInsertSuccess
     try:
         dbConn = cx_Oracle.connect(appDbConnStr)
         dbCur = dbConn.cursor()
-        colsNames = [" "," "," "," "]
+        # keyNames names of the raw data
+        keyNames = ['data_time', 'entity_tag', 'metric_name', 'data_val']
+        colsNames = ["TIME_STAMP","entity_tag","metric_name","data_value"]
         sqlPlaceHldrsTxt = ','.join([':{0}'.format(x+1)
                                      for x in range(len(colsNames))])
-        for dataSample in dataSamples:
-            insertSql = "INSERT INTO MIS_WAREHOUSE.STATE_FILES_DATA({0}) VALUES ({1})".format(colsNames, sqlPlaceHldrsTxt)
-            
-            dbCur.execute(insertSql,dataSample)
-            dbConn.commit()
+        # delete the rows which are already present
+        existingEntityRecords = [(x['data_time'], x['entity_tag'])
+                                for x in dataSamples]
+        dbCur.execute("ALTER SESSION SET NLS_DATE_FORMAT = 'YYYY-MM-DD HH24:MI:SS' ")
+        dbCur.executemany(
+                "delete from MIS_WAREHOUSE.STATE_FILES_DATA where TIME_STAMP=:0 and ENTITY_TAG=:1", existingEntityRecords)
+        # insert the raw data
+        sql_insert = "insert into MIS_WAREHOUSE.STATE_FILES_DATA({0}) values ({1})".format(
+            ','.join(colsNames), sqlPlaceHldrsTxt)
+
+        dbCur.executemany(sql_insert, [tuple(
+            [r[col] for col in keyNames]) for r in dataSamples])
+        # commit the changes
+        dbConn.commit()
     
     except Exception as err:
         isInsertSuccess = False

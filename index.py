@@ -1,11 +1,12 @@
-from src.config.appConfig import loadFileMappings
+from src.config.appConfig import initConfig
 from src.app.readFilesData import InsertFilesDataRepo
 import datetime as dt
-# fileMappings = loadFileMappings()
-# print(fileMappings)
+# instantiate loadFileMappings, 
+
+initConfig()
 
 # initiate object
 readFiles = InsertFilesDataRepo()
 targetDt = dt.datetime.today()- dt.timedelta(days=1)
-print(targetDt)
+# print(targetDt)
 isInsertionSuccess = readFiles.insertFilesData(targetDt)

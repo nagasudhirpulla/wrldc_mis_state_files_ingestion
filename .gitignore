@@ -6,6 +6,8 @@ __pycache__
 *.py[cod]
 *$py.class
 .mypy_cache/
+stateFiles/
+config.json
 
 # Distribution / packaging 
 .Python build/ 

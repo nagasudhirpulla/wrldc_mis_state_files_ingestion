@@ -1,7 +1,7 @@
 from typing import Optional
 from typing import Optional, Any
 from openpyxl.worksheet.worksheet import Worksheet
-
+import math
 
 def getMeasData(sheetData: Worksheet, addresses: str, aggStrategy: Optional[str], equation: Optional[str]) -> Optional[float]:
     """get measurement value from file sheet data
@@ -16,7 +16,7 @@ def getMeasData(sheetData: Worksheet, addresses: str, aggStrategy: Optional[str]
         Optional[float]: [description]
     """    
     # split the addresses by comma
-    addressList = ','.split(addresses)
+    addressList = addresses.split(',')
     addressList = [x.strip() for x in addressList]
 
     # get the values in a list
@@ -30,10 +30,10 @@ def getMeasData(sheetData: Worksheet, addresses: str, aggStrategy: Optional[str]
         valuesList = [sum(valuesList)]
 
     # check if equation is present, if present evaluate equation
-    if equation is not None:
+    if equation != 'nan':
         subEquation = equation
         for itr, val in enumerate(valuesList):
-            subEquation.replace("{{"+str(itr)+"}}", val)
+            subEquation = subEquation.replace("{{"+str(itr)+"}}", str(val))
         valuesList = [eval(subEquation)]
 
     # return the value
